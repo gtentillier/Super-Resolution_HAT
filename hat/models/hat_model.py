@@ -1,6 +1,6 @@
 import torch
 from torch.nn import functional as F
-
+from os import sep
 from basicsr.utils.registry import MODEL_REGISTRY
 from basicsr.models.sr_model import SRModel
 from basicsr.metrics import calculate_metric
@@ -128,8 +128,8 @@ class HATModel(SRModel):
         metric_data = dict()
         if use_pbar:
             pbar = tqdm(total=len(dataloader), unit='image')
-
-        for idx, val_data in enumerate(dataloader):
+        tot = len(dataloader)
+        for idx, val_data in tqdm(enumerate(dataloader), total=tot):
             img_name = osp.splitext(osp.basename(val_data['lq_path'][0]))[0]
             self.feed_data(val_data)
 
@@ -163,7 +163,8 @@ class HATModel(SRModel):
                                                  f'{img_name}_{self.opt["val"]["suffix"]}.png')
                     else:
                         save_img_path = osp.join(self.opt['path']['visualization'], dataset_name,
-                                                 f'{img_name}_{self.opt["name"]}.png')
+                                                #  f'{img_name}_{self.opt["name"]}.png')
+                                                 f'{img_name}_{self.opt["path"]["pretrain_network_g"].split(sep)[-1].split(".")[0]}.png')
                 imwrite(sr_img, save_img_path)
 
             if with_metrics:
