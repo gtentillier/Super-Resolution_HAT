@@ -15,7 +15,7 @@ _original_scandir = basicsr.utils.scandir
 
 def filtered_scandir(dir_path, suffix=None, recursive=False, full_path=False):
     for path in _original_scandir(dir_path, suffix, recursive, full_path):
-        if osp.basename(path) != 'doc.md':
+        if osp.basename(path) != 'README.md':
             yield path
 
 basicsr.utils.scandir = filtered_scandir
